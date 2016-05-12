@@ -166,7 +166,7 @@ if [[ $response =~ ^(yes|y)$ ]]; then
     echo
 fi
 
-read -r -p "Do you want to try and configure nginx and php?" response
+read -r -p "Do you want to try and configure nginx and php [y/N]" response
 response=${response,,}    #
 if [[ $response =~ ^(yes|y)$ ]]; then
     echo "Changing PHP fpm to listen on a TCP socket ";
