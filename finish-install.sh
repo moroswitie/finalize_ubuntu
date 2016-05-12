@@ -135,16 +135,6 @@ if [[ $response =~ ^(yes|y)$ ]]; then
     echo
 fi
 
-read -r -p "Do you want to install nginx [y/N] " response
-response=${response,,}    #
-if [[ $response =~ ^(yes|y)$ ]]; then
-    echo "Installing nginx";
-    echo "====================";
-    apt-get install -y nginx
-    echo "done"
-    echo
-fi
-
 read -r -p "Do you want to install PHP 7.0 (including composer) [y/N]" response
 response=${response,,}    #
 if [[ $response =~ ^(yes|y)$ ]]; then
@@ -152,6 +142,16 @@ if [[ $response =~ ^(yes|y)$ ]]; then
     echo "====================";
     apt-get install -y php7.0-fpm php7.0-mysql php-redis php7.0-curl php7.0-mcrypt php7.0-zip
     curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer
+    echo "done"
+    echo
+fi
+
+read -r -p "Do you want to install nginx [y/N] " response
+response=${response,,}    #
+if [[ $response =~ ^(yes|y)$ ]]; then
+    echo "Installing nginx";
+    echo "====================";
+    apt-get install -y nginx
     echo "done"
     echo
 fi
@@ -171,7 +171,8 @@ response=${response,,}    #
 if [[ $response =~ ^(yes|y)$ ]]; then
     echo "Changing PHP fpm to listen on a TCP socket ";
     # Comment out current listen setting, and add a new one below it
-    sed -i -e 's@listen = /run/php/php7.0-fpm.sock@#listen = /run/php/php7.0-fpm.sock\nlisten = 127.0.0.1:9000@g' /etc/php/7.0/fpm/pool.d/www.conf
+    sed -i -e 's@listen = /run/php/php7.0-fpm.sock@; listen = /run/php/php7.0-fpm.sock\nlisten = 127.0.0.1:9000@g' /etc/php/7.0/fpm/pool.d/www.conf
+    service php7.0-fpm restart
     echo "done"
     echo
 fi
