@@ -15,7 +15,8 @@ This script will:
 Optionally:
   * Download and install MariaDB
   * Download and install NGINX
-  * Download and install PHP7
+  * Download and install PHP7 (including composer)
+  * Download and install Redis (server)
 
 This script has been tested on Ubuntu 16.04  Running it on other environments may not work correctly.
 
