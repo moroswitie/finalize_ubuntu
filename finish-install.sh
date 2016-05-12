@@ -116,6 +116,9 @@ if [[ $response =~ ^(yes|y)$ ]]; then
     touch /etc/apt/sources.list.d/nginx.list
     echo "deb http://nginx.org/packages/mainline/ubuntu/ xenial nginx" > /etc/apt/sources.list.d/nginx.list
     echo "deb-src http://nginx.org/packages/mainline/ubuntu/ xenial nginx" >> /etc/apt/sources.list.d/nginx.list
+
+    add-apt-repository ppa:chris-lea/redis-server -y
+
     apt-get update
 else
     echo "Terminating script";
@@ -142,7 +145,6 @@ if [[ $response =~ ^(yes|y)$ ]]; then
     echo
 fi
 
-
 read -r -p "Do you want to install PHP 7.0 (including composer) [y/N]" response
 response=${response,,}    #
 if [[ $response =~ ^(yes|y)$ ]]; then
@@ -154,6 +156,15 @@ if [[ $response =~ ^(yes|y)$ ]]; then
     echo
 fi
 
+read -r -p "Do you want to install Redis [y/N]" response
+response=${response,,}    #
+if [[ $response =~ ^(yes|y)$ ]]; then
+    echo "Installing Redis";
+    echo "====================";
+    apt-get install -y redis-server
+    echo "done"
+    echo
+fi
 
 read -r -p "Do you want to try and configure nginx and php?" response
 response=${response,,}    #
