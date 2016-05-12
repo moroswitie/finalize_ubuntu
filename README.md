@@ -10,6 +10,7 @@ This script will:
   * Download and install latest kernel
   * Download and install NTP daemon (connecting to dutch based NTP servers)
   * Download and install some generic development packages
+  * Configure IP tables to only open ports 22,80 and 443
 
 Optionally:
   * Download and install MariaDB
