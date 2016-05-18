@@ -107,9 +107,11 @@ response=${response,,}    #
 if [[ $response =~ ^(yes|y)$ ]]; then
     echo "Starting part 2.... SORRY this part is still underdevelopment";
 
+    # MariaDB
     apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8
     add-apt-repository 'deb [arch=amd64,i386] http://mirror.i3d.net/pub/mariadb/repo/10.1/ubuntu xenial main'
 
+    # Nginx
     wget http://nginx.org/keys/nginx_signing.key
     apt-key add nginx_signing.key
     rm -f ./nginx_signing.key
@@ -117,6 +119,7 @@ if [[ $response =~ ^(yes|y)$ ]]; then
     echo "deb http://nginx.org/packages/mainline/ubuntu/ xenial nginx" > /etc/apt/sources.list.d/nginx.list
     echo "deb-src http://nginx.org/packages/mainline/ubuntu/ xenial nginx" >> /etc/apt/sources.list.d/nginx.list
 
+    # PPA Redis
     add-apt-repository ppa:chris-lea/redis-server -y
 
     apt-get update
