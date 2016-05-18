@@ -54,7 +54,8 @@ echo "Adding some aliases";
 echo "===============================================================";
 echo
 
-echo "alias lsa='ls -la'" > /etc/profile.d/00-aliases_finalize_script.sh
+echo "alias lsa='ls -la --color=always'" > /etc/profile.d/00-aliases_finalize_script.sh
+echo "alias ls='ls --color=always'" >> /etc/profile.d/00-aliases_finalize_script.sh
 
 echo
 echo "Configuring iptables: opening ports 22,80,443";
