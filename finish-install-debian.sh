@@ -47,7 +47,7 @@ echo "Downloading and installing some basic tools";
 echo "===============================================================";
 echo
 
-apt-get install -y build-essential checkinstall ntp ntpdate software-properties-common bzip2 zip sysv-rc-conf iptables-persistent git bash-completion vim
+apt-get install -y build-essential checkinstall ntp ntpdate software-properties-common bzip2 zip sysv-rc-conf iptables-persistent git bash-completion vim curl sudo
 
 echo
 echo "Adding some aliases";
@@ -160,8 +160,8 @@ response=${response,,}    #
 if [[ $response =~ ^(yes|y)$ ]]; then
     echo "Installing PHP 7.0";
     echo "====================";
-    apt-get install -y php7.0-fpm php7.0-mysql php-redis php7.0-curl php7.0-mcrypt php7.0-zip
-    curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer
+    apt-get install -y php7.0-fpm php7.0-mysql php7.0-redis php7.0-curl php7.0-mcrypt
+    curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
     echo "done"
     echo
 fi
@@ -195,4 +195,19 @@ if [[ $response =~ ^(yes|y)$ ]]; then
     service php7.0-fpm restart
     echo "done"
     echo
+
+    echo "Setting up NGINX"
+    echo "====================";
+    DIR_ENABLED=/etc/nginx/sites-enabled/
+    DIR_AVAILABLE=/etc/nginx/sites-available/
+    [ -d "$DIR_AVAILABLE" ] || mkdir ${DIR_AVAILABLE}
+    [ -d "$DIR_AVAILABLE" ] || mkdir ${DIR_AVAILABLE}
+
+    # create symlink to file if it doesn't exist
+    DEFAULT_SITE=/etc/nginx/sites-enabled/default
+    if ! [ -L "$DEFAULT_SITE" ]; then
+        # does not exist create symlink
+        ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
+    fi
+
 fi

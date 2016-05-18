@@ -41,7 +41,7 @@ echo "Downloading and installing some basic tools";
 echo "===============================================================";
 echo
 
-apt-get install -y build-essential checkinstall ntp ntpdate software-properties-common bzip2 zip sysv-rc-conf iptables-persistent git bash-completion
+apt-get install -y build-essential checkinstall ntp ntpdate software-properties-common bzip2 zip sysv-rc-conf iptables-persistent git bash-completion curl
 
 echo
 echo "Adding some aliases";
