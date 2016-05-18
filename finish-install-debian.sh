@@ -49,6 +49,12 @@ echo
 
 apt-get install -y build-essential checkinstall ntp ntpdate software-properties-common bzip2 zip sysv-rc-conf iptables-persistent git bash-completion vim
 
+echo
+echo "Adding some aliases";
+echo "===============================================================";
+echo
+
+echo "alias lsa='ls -la'" > /etc/profile.d/00-aliases_finalize_script.sh
 
 echo
 echo "Configuring iptables: opening ports 22,80,443";
