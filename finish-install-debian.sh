@@ -237,5 +237,8 @@ if [[ $response =~ ^(yes|y)$ ]]; then
     # Create info page
     echo "<?php" > /var/www/html/info.php
     echo "phpinfo()" >> /var/www/html/info.php
+    service nginx restart
+    echo "done"
+
 
 fi
