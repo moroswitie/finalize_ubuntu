@@ -27,6 +27,6 @@ WARNING 2: Please review the original source code at https://github.com/moroswit
 WARNING 3: You run this script entirely at your own risk.
 
 Usage:
-wget -N https://github.com/moroswitie/finalize_ubuntu/raw/master/finish-install-debian.sh&&bash finish-install-debian.sh
+wget -N https://github.com/moroswitie/finalize_ubuntu/raw/master/finish-install-debian.sh&&bash finish-install-debian.sh  
 _note: if you get an invalid certificate error (debian minimum install), use wget -N --no-check-certificate [URL]_
 
