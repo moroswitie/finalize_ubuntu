@@ -205,7 +205,7 @@ if [[ $response =~ ^(yes|y)$ ]]; then
     [ -d "$DIR_ENABLED" ] || mkdir ${DIR_ENABLED}
     [ -d "$DIR_AVAILABLE" ] || mkdir ${DIR_AVAILABLE}
     [ -d "$DIR_SNIPPETS" ] || mkdir ${DIR_SNIPPETS}
-    [ -d "$DIR_WWW" ] || mkdir ${DIR_WWW}
+    [ -d "$DIR_WWW" ] || mkdir -p mkdir${DIR_WWW}
 
     # download default nginx configs and put in correct locations
     wget https://github.com/moroswitie/finalize_ubuntu/raw/master/nginx/nginx.conf
@@ -236,7 +236,7 @@ if [[ $response =~ ^(yes|y)$ ]]; then
 
     # Create info page
     echo "<?php" > /var/www/html/info.php
-    echo "phpinfo()" >> /var/www/html/info.php
+    echo "phpinfo();" >> /var/www/html/info.php
     service nginx restart
     echo "done"
 
