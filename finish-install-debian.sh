@@ -201,9 +201,11 @@ if [[ $response =~ ^(yes|y)$ ]]; then
     DIR_ENABLED=/etc/nginx/sites-enabled/
     DIR_AVAILABLE=/etc/nginx/sites-available/
     DIR_SNIPPETS=/etc/nginx/snippets/
+    DIR_WWW=/var/www/html/
     [ -d "$DIR_ENABLED" ] || mkdir ${DIR_ENABLED}
     [ -d "$DIR_AVAILABLE" ] || mkdir ${DIR_AVAILABLE}
     [ -d "$DIR_SNIPPETS" ] || mkdir ${DIR_SNIPPETS}
+    [ -d "$DIR_WWW" ] || mkdir ${DIR_WWW}
 
     # download default nginx configs and put in correct locations
     wget https://github.com/moroswitie/finalize_ubuntu/raw/master/nginx/nginx.conf
@@ -231,5 +233,9 @@ if [[ $response =~ ^(yes|y)$ ]]; then
     if [ -f "$DEFAULT_CONFIG" ]; then
         rm "$DEFAULT_CONFIG" -f
     fi
+
+    # Create info page
+    echo "<?php" > /var/www/html/info.php
+    echo "phpinfo()" >> /var/www/html/info.php
 
 fi
