@@ -2,9 +2,9 @@
 # Copyright (C) 2016 Moroswitie
 
 echo "
-#####################################################################
-#               Finish Ubuntu 16.04 base installation               #
-#####################################################################
+=============================================
+==== Finish Debian 8.4 base installation ====
+=============================================
 
 This script will:
   * Download and install latest currently installed packages
@@ -13,11 +13,17 @@ This script will:
   * Download and install some generic development packages
   * Configure IP tables to only open ports 22,80 and 443
 
-This script has been tested on Ubuntu 16.04  Running it on other environments may not work correctly.
+Optionally:
+  * Download and install MariaDB
+  * Download and install NGINX
+  * Download and install PHP7 (including composer)
+  * Download and install Redis (server)
+
+This script has been tested on Debian 8.4  Running it on other environments may not work correctly.
 
 WARNING 1: This script should be run as root
-WARNING 2: Please review the original source code at https://github.com/moroswitie/finalize_ubuntu/finish-install.sh if you have any concerns
-WARNING 2: You run this script entirely at your own risk.
+WARNING 2: Please review the original source code at https://github.com/moroswitie/finalize_ubuntu/finish-install-debian.sh if you have any concerns
+WARNING 3: You run this script entirely at your own risk.
 "
 
 # Login as root user and execute below commands or append sudo to all commands
@@ -41,7 +47,7 @@ echo "Downloading and installing some basic tools";
 echo "===============================================================";
 echo
 
-apt-get install -y build-essential checkinstall ntp ntpdate software-properties-common bzip2 zip sysv-rc-conf iptables-persistent git bash-completion
+apt-get install -y build-essential checkinstall ntp ntpdate software-properties-common bzip2 zip sysv-rc-conf iptables-persistent git bash-completion vim
 
 
 echo
@@ -107,17 +113,25 @@ response=${response,,}    #
 if [[ $response =~ ^(yes|y)$ ]]; then
     echo "Starting part 2.... SORRY this part is still underdevelopment";
 
-    apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8
-    add-apt-repository 'deb [arch=amd64,i386] http://mirror.i3d.net/pub/mariadb/repo/10.1/ubuntu xenial main'
+    # MariaDB
+    apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xcbcb082a1bb943db
+    add-apt-repository 'deb [arch=amd64,i386] http://mirror.i3d.net/pub/mariadb/repo/10.1/debian jessie main'
 
+    #Nginx
     wget http://nginx.org/keys/nginx_signing.key
     apt-key add nginx_signing.key
     rm -f ./nginx_signing.key
     touch /etc/apt/sources.list.d/nginx.list
-    echo "deb http://nginx.org/packages/mainline/ubuntu/ xenial nginx" > /etc/apt/sources.list.d/nginx.list
-    echo "deb-src http://nginx.org/packages/mainline/ubuntu/ xenial nginx" >> /etc/apt/sources.list.d/nginx.list
+    echo "deb http://nginx.org/packages/mainline/debian/ jessie nginx" > /etc/apt/sources.list.d/nginx.list
+    echo "deb-src http://nginx.org/packages/mainline/debian/ jessie nginx" >> /etc/apt/sources.list.d/nginx.list
 
-    add-apt-repository ppa:chris-lea/redis-server -y
+    #dotdeb
+    wget https://www.dotdeb.org/dotdeb.gpg
+    apt-key add dotdeb.gpg
+    rm -f ./dotdeb.gpg
+    touch /etc/apt/sources.list.d/dotdeb.org.list
+    echo "deb http://packages.dotdeb.org jessie all" > /etc/apt/sources.list.d/dotdeb.org.list
+    echo "deb-src http://packages.dotdeb.org jessie all" >> /etc/apt/sources.list.d/dotdeb.org.list
 
     apt-get update
 else
