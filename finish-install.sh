@@ -115,7 +115,9 @@ if [[ $response =~ ^(yes|y)$ ]]; then
 
     # MariaDB
     apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8
-    add-apt-repository 'deb [arch=amd64,i386] http://mirror.i3d.net/pub/mariadb/repo/10.1/ubuntu xenial main'
+    touch /etc/apt/sources.list.d/MariaDB.list
+    echo "deb [arch=amd64,i386] http://mirror.i3d.net/pub/mariadb/repo/10.1/ubuntu xenial main" > /etc/apt/sources.list.d/MariaDB.list
+    echo "deb-src http://mirror.i3d.net/pub/mariadb/repo/10.1/ubuntu xenial main" >> /etc/apt/sources.list.d/MariaDB.list
 
     # Nginx
     wget http://nginx.org/keys/nginx_signing.key
