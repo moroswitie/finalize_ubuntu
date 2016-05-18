@@ -227,8 +227,8 @@ if [[ $response =~ ^(yes|y)$ ]]; then
     fi
 
     # Delete old default file
-    DEFAULT_CONFIG=/etc/nginx/conf.d/default
-    if [ -f "DEFAULT_CONFIG" ]; then
+    DEFAULT_CONFIG=/etc/nginx/conf.d/default.conf
+    if [ -f "$DEFAULT_CONFIG" ]; then
         rm "$DEFAULT_CONFIG" -f
     fi
 
