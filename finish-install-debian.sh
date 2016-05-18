@@ -200,14 +200,36 @@ if [[ $response =~ ^(yes|y)$ ]]; then
     echo "====================";
     DIR_ENABLED=/etc/nginx/sites-enabled/
     DIR_AVAILABLE=/etc/nginx/sites-available/
+    DIR_SNIPPETS=/etc/nginx/snippets/
+    [ -d "$DIR_ENABLED" ] || mkdir ${DIR_ENABLED}
     [ -d "$DIR_AVAILABLE" ] || mkdir ${DIR_AVAILABLE}
-    [ -d "$DIR_AVAILABLE" ] || mkdir ${DIR_AVAILABLE}
+    [ -d "$DIR_SNIPPETS" ] || mkdir ${DIR_SNIPPETS}
+
+    # download default nginx configs and put in correct locations
+    wget https://github.com/moroswitie/finalize_ubuntu/raw/master/nginx/nginx.conf
+    wget https://github.com/moroswitie/finalize_ubuntu/raw/master/nginx/fastcgi.conf
+    wget https://github.com/moroswitie/finalize_ubuntu/raw/master/nginx/snippets/fastcgi-php.conf
+    wget https://github.com/moroswitie/finalize_ubuntu/raw/master/nginx/sites-available/default
+    mv /etc/nginx/nginx.conf /etc/nginx/nginx.conf.backup
+    mv ./nginx.conf /etc/nginx/
+    mv ./fastcgi.conf /etc/nginx/
+    mv ./fastcgi-php.conf /etc/nginx/snippets/
+    mv ./default /etc/nginx/sites-available/
+
+    # keep same user as default from distro
+    # sed -i -e 's/user www-data/user nginx/g' /etc/nginx/nginx.conf
 
     # create symlink to file if it doesn't exist
     DEFAULT_SITE=/etc/nginx/sites-enabled/default
     if ! [ -L "$DEFAULT_SITE" ]; then
         # does not exist create symlink
         ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
+    fi
+
+    # Delete old default file
+    DEFAULT_CONFIG=/etc/nginx/conf.d/default
+    if [ -f "DEFAULT_CONFIG" ]; then
+        rm "$DEFAULT_CONFIG" -f
     fi
 
 fi
