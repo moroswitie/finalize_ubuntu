@@ -17,7 +17,7 @@ This script has been tested on Ubuntu 16.04  Running it on other environments ma
 
 WARNING 1: This script should be run as root
 WARNING 2: Please review the original source code at https://github.com/moroswitie/finalize_ubuntu/finish-install.sh if you have any concerns
-WARNING 2: You run this script entirely at your own risk.
+WARNING 3: You run this script entirely at your own risk.
 "
 
 # Login as root user and execute below commands or append sudo to all commands
@@ -41,7 +41,7 @@ echo "Downloading and installing some basic tools";
 echo "===============================================================";
 echo
 
-apt-get install -y build-essential checkinstall ntp ntpdate software-properties-common bzip2 zip sysv-rc-conf iptables-persistent git bash-completion curl
+apt-get install -y build-essential checkinstall ntp ntpdate software-properties-common bzip2 zip sysv-rc-conf iptables-persistent git bash-completion vim curl
 
 echo
 echo "Adding some aliases";
@@ -153,7 +153,7 @@ if [[ $response =~ ^(yes|y)$ ]]; then
     echo "Installing PHP 7.0";
     echo "====================";
     apt-get install -y php7.0-fpm php7.0-mysql php-redis php7.0-curl php7.0-mcrypt php7.0-zip
-    curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer
+    curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
     echo "done"
     echo
 fi
@@ -187,4 +187,49 @@ if [[ $response =~ ^(yes|y)$ ]]; then
     service php7.0-fpm restart
     echo "done"
     echo
+
+    echo "Setting up NGINX"
+    echo "====================";
+    DIR_ENABLED=/etc/nginx/sites-enabled/
+    DIR_AVAILABLE=/etc/nginx/sites-available/
+    DIR_SNIPPETS=/etc/nginx/snippets/
+    DIR_WWW=/var/www/html/
+    [ -d "$DIR_ENABLED" ] || mkdir ${DIR_ENABLED}
+    [ -d "$DIR_AVAILABLE" ] || mkdir ${DIR_AVAILABLE}
+    [ -d "$DIR_SNIPPETS" ] || mkdir ${DIR_SNIPPETS}
+    [ -d "$DIR_WWW" ] || mkdir -p mkdir${DIR_WWW}
+
+    # download default nginx configs and put in correct locations
+    wget https://github.com/moroswitie/finalize_ubuntu/raw/master/nginx/nginx.conf
+    wget https://github.com/moroswitie/finalize_ubuntu/raw/master/nginx/fastcgi.conf
+    wget https://github.com/moroswitie/finalize_ubuntu/raw/master/nginx/snippets/fastcgi-php.conf
+    wget https://github.com/moroswitie/finalize_ubuntu/raw/master/nginx/sites-available/default
+    mv /etc/nginx/nginx.conf /etc/nginx/nginx.conf.backup
+    mv ./nginx.conf /etc/nginx/
+    mv ./fastcgi.conf /etc/nginx/
+    mv ./fastcgi-php.conf /etc/nginx/snippets/
+    mv ./default /etc/nginx/sites-available/
+
+    # keep same user as default from distro
+    # sed -i -e 's/user www-data/user nginx/g' /etc/nginx/nginx.conf
+
+    # create symlink to file if it doesn't exist
+    DEFAULT_SITE=/etc/nginx/sites-enabled/default
+    if ! [ -L "$DEFAULT_SITE" ]; then
+        # does not exist create symlink
+        ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
+    fi
+
+    # Delete old default file
+    DEFAULT_CONFIG=/etc/nginx/conf.d/default.conf
+    if [ -f "$DEFAULT_CONFIG" ]; then
+        rm "$DEFAULT_CONFIG" -f
+    fi
+
+    # Create info page
+    echo "<?php" > /var/www/html/info.php
+    echo "phpinfo();" >> /var/www/html/info.php
+    service nginx restart
+    echo "done"
+
 fi

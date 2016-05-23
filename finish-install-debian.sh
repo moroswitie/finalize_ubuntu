@@ -243,5 +243,4 @@ if [[ $response =~ ^(yes|y)$ ]]; then
     service nginx restart
     echo "done"
 
-
 fi
