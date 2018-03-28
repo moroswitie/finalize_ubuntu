@@ -130,6 +130,9 @@ if [[ $response =~ ^(yes|y)$ ]]; then
 
     # PPA Redis
     add-apt-repository ppa:chris-lea/redis-server -y
+    
+    # PHP 7.1, 7.2
+    add-apt-repository ppa:ondrej/php -y
 
     apt-get update
 else
@@ -152,7 +155,8 @@ response=${response,,}    #
 if [[ $response =~ ^(yes|y)$ ]]; then
     echo "Installing PHP 7.0";
     echo "====================";
-    apt-get install -y php7.0-fpm php7.0-mysql php-redis php7.0-curl php7.0-mcrypt php7.0-zip php-igbinary php7.0-mbstring php7.0-soap php7.0-xml
+    # apt-get install -y php7.0-fpm php7.0-mysql php-redis php7.0-curl php7.0-mcrypt php7.0-zip php-igbinary php7.0-mbstring php7.0-soap php7.0-xml
+    apt-get install -y php7.2-fpm php7.2-mysql php-redis php7.2-curl php7.2-zip php-igbinary php7.2-mbstring php7.2-soap php7.2-xml
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
     echo "done"
     echo
@@ -183,8 +187,9 @@ response=${response,,}    #
 if [[ $response =~ ^(yes|y)$ ]]; then
     echo "Changing PHP fpm to listen on a TCP socket ";
     # Comment out current listen setting, and add a new one below it
-    sed -i -e 's@listen = /run/php/php7.0-fpm.sock@; listen = /run/php/php7.0-fpm.sock\nlisten = 127.0.0.1:9000@g' /etc/php/7.0/fpm/pool.d/www.conf
-    service php7.0-fpm restart
+    # sed -i -e 's@listen = /run/php/php7.0-fpm.sock@; listen = /run/php/php7.0-fpm.sock\nlisten = 127.0.0.1:9000@g' /etc/php/7.0/fpm/pool.d/www.conf
+    sed -i -e 's@listen = /run/php/php7.2-fpm.sock@; listen = /run/php/php7.2-fpm.sock\nlisten = 127.0.0.1:9000@g' /etc/php/7.2/fpm/pool.d/www.conf
+    service php7.2-fpm restart
     echo "done"
     echo
 
