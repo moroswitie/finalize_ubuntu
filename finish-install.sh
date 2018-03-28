@@ -152,7 +152,7 @@ response=${response,,}    #
 if [[ $response =~ ^(yes|y)$ ]]; then
     echo "Installing PHP 7.0";
     echo "====================";
-    apt-get install -y php7.0-fpm php7.0-mysql php-redis php7.0-curl php7.0-mcrypt php7.0-zip
+    apt-get install -y php7.0-fpm php7.0-mysql php-redis php7.0-curl php7.0-mcrypt php7.0-zip php-igbinary php7.0-mbstring php7.0-soap php7.0-xml
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
     echo "done"
     echo
