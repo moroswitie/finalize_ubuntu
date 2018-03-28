@@ -117,7 +117,7 @@ if [[ $response =~ ^(yes|y)$ ]]; then
     # MariaDB
     apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8
     touch /etc/apt/sources.list.d/MariaDB.list
-    echo "deb [arch=amd64,i386] http://mirror.i3d.net/pub/mariadb/repo/10.1/ubuntu xenial main" > /etc/apt/sources.list.d/MariaDB.list
+    echo "deb [arch=amd64,i386] http://mirror.i3d.net/pub/mariadb/repo/10.2/ubuntu xenial main" > /etc/apt/sources.list.d/MariaDB.list
     echo "deb-src http://mirror.i3d.net/pub/mariadb/repo/10.1/ubuntu xenial main" >> /etc/apt/sources.list.d/MariaDB.list
 
     # Nginx
@@ -126,7 +126,7 @@ if [[ $response =~ ^(yes|y)$ ]]; then
     rm -f ./nginx_signing.key
     touch /etc/apt/sources.list.d/nginx.list
     echo "deb http://nginx.org/packages/mainline/ubuntu/ xenial nginx" > /etc/apt/sources.list.d/nginx.list
-    echo "deb-src http://nginx.org/packages/mainline/ubuntu/ xenial nginx" >> /etc/apt/sources.list.d/nginx.list
+    echo "deb-src http://mirror.i3d.net/pub/mariadb/repo/10.2/ubuntu xenial main" >> /etc/apt/sources.list.d/nginx.list
 
     # PPA Redis
     add-apt-repository ppa:chris-lea/redis-server -y
