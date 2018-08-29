@@ -126,7 +126,7 @@ if [[ $response =~ ^(yes|y)$ ]]; then
     rm -f ./nginx_signing.key
     touch /etc/apt/sources.list.d/nginx.list
     echo "deb http://nginx.org/packages/mainline/ubuntu/ xenial nginx" > /etc/apt/sources.list.d/nginx.list
-    echo "deb-src http://nginx.org/packages/mainline/ubuntu/ xenial main" >> /etc/apt/sources.list.d/nginx.list
+    echo "deb-src http://nginx.org/packages/mainline/ubuntu/ xenial nginx" >> /etc/apt/sources.list.d/nginx.list
 
     # PPA Redis
     add-apt-repository ppa:chris-lea/redis-server -y
