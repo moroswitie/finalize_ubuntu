@@ -117,8 +117,8 @@ if [[ $response =~ ^(yes|y)$ ]]; then
     # MariaDB
     apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8
     touch /etc/apt/sources.list.d/MariaDB.list
-    echo "deb [arch=amd64,i386] http://mirror.i3d.net/pub/mariadb/repo/10.2/ubuntu xenial main" > /etc/apt/sources.list.d/MariaDB.list
-    echo "deb-src http://mirror.i3d.net/pub/mariadb/repo/10.1/ubuntu xenial main" >> /etc/apt/sources.list.d/MariaDB.list
+    echo "deb [arch=amd64,arm64,i386,ppc64el] http://mirror.i3d.net/pub/mariadb/repo/10.3/ubuntu xenial main" > /etc/apt/sources.list.d/MariaDB.list
+    echo "deb-src http://mirror.i3d.net/pub/mariadb/repo/10.3/ubuntu xenial main" >> /etc/apt/sources.list.d/MariaDB.list
 
     # Nginx
     wget http://nginx.org/keys/nginx_signing.key
@@ -126,7 +126,7 @@ if [[ $response =~ ^(yes|y)$ ]]; then
     rm -f ./nginx_signing.key
     touch /etc/apt/sources.list.d/nginx.list
     echo "deb http://nginx.org/packages/mainline/ubuntu/ xenial nginx" > /etc/apt/sources.list.d/nginx.list
-    echo "deb-src http://mirror.i3d.net/pub/mariadb/repo/10.2/ubuntu xenial main" >> /etc/apt/sources.list.d/nginx.list
+    echo "deb-src http://nginx.org/packages/mainline/ubuntu/ xenial main" >> /etc/apt/sources.list.d/nginx.list
 
     # PPA Redis
     add-apt-repository ppa:chris-lea/redis-server -y
@@ -150,10 +150,10 @@ if [[ $response =~ ^(yes|y)$ ]]; then
     echo
 fi
 
-read -r -p "Do you want to install PHP 7.0 (including composer) [y/N]" response
+read -r -p "Do you want to install PHP 7.2 (including composer) [y/N]" response
 response=${response,,}    #
 if [[ $response =~ ^(yes|y)$ ]]; then
-    echo "Installing PHP 7.0";
+    echo "Installing PHP 7.2";
     echo "====================";
     # apt-get install -y php7.0-fpm php7.0-mysql php-redis php7.0-curl php7.0-mcrypt php7.0-zip php-igbinary php7.0-mbstring php7.0-soap php7.0-xml
     apt-get install -y php7.2-fpm php7.2-mysql php-redis php7.2-curl php7.2-zip php-igbinary php7.2-mbstring php7.2-soap php7.2-xml
