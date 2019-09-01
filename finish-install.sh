@@ -3,7 +3,7 @@
 
 echo "
 #####################################################################
-#               Finish Ubuntu 16.04 base installation               #
+#               Finish Ubuntu 18.04 base installation               #
 #####################################################################
 
 This script will:
@@ -13,7 +13,7 @@ This script will:
   * Download and install some generic development packages
   * Configure IP tables to only open ports 22,80 and 443
 
-This script has been tested on Ubuntu 16.04  Running it on other environments may not work correctly.
+This script has been tested on Ubuntu 18.04  Running it on other environments may not work correctly.
 
 WARNING 1: This script should be run as root
 WARNING 2: Please review the original source code at https://github.com/moroswitie/finalize_ubuntu/finish-install.sh if you have any concerns
@@ -48,7 +48,7 @@ echo "Adding some aliases";
 echo "===============================================================";
 echo
 
-echo "alias lsa='ls -la --color=always'" > /etc/profile.d/00-aliases_finalize_script.sh
+echo "alias lsa='ls -lah --color=always'" > /etc/profile.d/00-aliases_finalize_script.sh
 echo "alias ls='ls --color=always'" >> /etc/profile.d/00-aliases_finalize_script.sh
 
 echo
@@ -117,8 +117,8 @@ if [[ $response =~ ^(yes|y)$ ]]; then
     # MariaDB
     apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8
     touch /etc/apt/sources.list.d/MariaDB.list
-    echo "deb [arch=amd64,arm64,i386,ppc64el] http://mirror.i3d.net/pub/mariadb/repo/10.3/ubuntu xenial main" > /etc/apt/sources.list.d/MariaDB.list
-    echo "deb-src http://mirror.i3d.net/pub/mariadb/repo/10.3/ubuntu xenial main" >> /etc/apt/sources.list.d/MariaDB.list
+    echo "deb [arch=amd64,arm64,ppc64el] http://mirror.i3d.net/pub/mariadb/repo/10.4/ubuntu bionic main" > /etc/apt/sources.list.d/MariaDB.list
+    echo "deb-src http://mirror.i3d.net/pub/mariadb/repo/10.4/ubuntu bionic main" >> /etc/apt/sources.list.d/MariaDB.list
 
     # Nginx
     wget http://nginx.org/keys/nginx_signing.key
@@ -131,7 +131,7 @@ if [[ $response =~ ^(yes|y)$ ]]; then
     # PPA Redis
     add-apt-repository ppa:chris-lea/redis-server -y
     
-    # PHP 7.1, 7.2
+    # PHP 7.*
     add-apt-repository ppa:ondrej/php -y
 
     apt-get update
@@ -150,13 +150,13 @@ if [[ $response =~ ^(yes|y)$ ]]; then
     echo
 fi
 
-read -r -p "Do you want to install PHP 7.2 (including composer) [y/N]" response
+read -r -p "Do you want to install PHP 7.3 (including composer) [y/N]" response
 response=${response,,}    #
 if [[ $response =~ ^(yes|y)$ ]]; then
-    echo "Installing PHP 7.2";
+    echo "Installing PHP 7.3";
     echo "====================";
     # apt-get install -y php7.0-fpm php7.0-mysql php-redis php7.0-curl php7.0-mcrypt php7.0-zip php-igbinary php7.0-mbstring php7.0-soap php7.0-xml
-    apt-get install -y php7.2-fpm php7.2-mysql php-redis php7.2-curl php7.2-zip php-igbinary php7.2-mbstring php7.2-soap php7.2-xml
+    apt-get install -y php7.3-fpm php7.3-mysql php-redis php7.3-curl php7.3-zip php-igbinary php7.3-mbstring php7.3-soap php7.3-xml
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
     echo "done"
     echo
@@ -188,8 +188,8 @@ if [[ $response =~ ^(yes|y)$ ]]; then
     echo "Changing PHP fpm to listen on a TCP socket ";
     # Comment out current listen setting, and add a new one below it
     # sed -i -e 's@listen = /run/php/php7.0-fpm.sock@; listen = /run/php/php7.0-fpm.sock\nlisten = 127.0.0.1:9000@g' /etc/php/7.0/fpm/pool.d/www.conf
-    sed -i -e 's@listen = /run/php/php7.2-fpm.sock@; listen = /run/php/php7.2-fpm.sock\nlisten = 127.0.0.1:9000@g' /etc/php/7.2/fpm/pool.d/www.conf
-    service php7.2-fpm restart
+    sed -i -e 's@listen = /run/php/php7.3-fpm.sock@; listen = /run/php/php7.3-fpm.sock\nlisten = 127.0.0.1:9000@g' /etc/php/7.3/fpm/pool.d/www.conf
+    service php7.3-fpm restart
     echo "done"
     echo
 
@@ -208,11 +208,13 @@ if [[ $response =~ ^(yes|y)$ ]]; then
     wget https://github.com/moroswitie/finalize_ubuntu/raw/master/nginx/nginx.conf
     wget https://github.com/moroswitie/finalize_ubuntu/raw/master/nginx/fastcgi.conf
     wget https://github.com/moroswitie/finalize_ubuntu/raw/master/nginx/snippets/fastcgi-php.conf
+    wget https://github.com/moroswitie/finalize_ubuntu/raw/master/nginx/snippets/well-known.conf
     wget https://github.com/moroswitie/finalize_ubuntu/raw/master/nginx/sites-available/default
     mv /etc/nginx/nginx.conf /etc/nginx/nginx.conf.backup
     mv ./nginx.conf /etc/nginx/
     mv ./fastcgi.conf /etc/nginx/
     mv ./fastcgi-php.conf /etc/nginx/snippets/
+    mv ./well-known.conf /etc/nginx/snippets/
     mv ./default /etc/nginx/sites-available/
 
     # keep same user as default from distro
