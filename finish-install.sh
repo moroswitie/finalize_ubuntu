@@ -171,7 +171,7 @@ response=${response,,}    #
 if [[ $response =~ ^(yes|y)$ ]]; then
     echo "Installing nginx";
     echo "====================";
-    apt-get install -y nginx
+    apt install -y nginx
     echo "done"
     echo
 fi
@@ -181,7 +181,7 @@ response=${response,,}    #
 if [[ $response =~ ^(yes|y)$ ]]; then
     echo "Installing Redis";
     echo "====================";
-    apt-get install -y redis-server
+    apt install -y redis-server
     echo "done"
     echo
 fi
