@@ -1,10 +1,10 @@
 #!/bin/bash
-# Copyright (C) 2016 Moroswitie
+# Copyright (C) 2020 Moroswitie
 
 echo "
-#####################################################################
-#               Finish Ubuntu 18.04 base installation               #
-#####################################################################
+#########################################################################
+#               Finish Ubuntu 20.04 LTS base installation               #
+#########################################################################
 
 This script will:
   * Download and install latest currently installed packages
@@ -13,7 +13,7 @@ This script will:
   * Download and install some generic development packages
   * Configure IP tables to only open ports 22,80 and 443
 
-This script has been tested on Ubuntu 18.04  Running it on other environments may not work correctly.
+This script has been tested on Ubuntu 20.04  Running it on other environments may not work correctly.
 
 WARNING 1: This script should be run as root
 WARNING 2: Please review the original source code at https://github.com/moroswitie/finalize_ubuntu/finish-install.sh if you have any concerns
@@ -34,14 +34,17 @@ fi
 echo "Downloading and installing latest currently installed packages";
 echo "===============================================================";
 echo
-apt-get update && apt-get dist-upgrade -y && apt-get autoremove && apt-get autoclean
+apt update && apt dist-upgrade -y && apt autoremove && apt autoclean
 
 echo
 echo "Downloading and installing some basic tools";
 echo "===============================================================";
 echo
 
-apt-get install -y build-essential checkinstall ntp ntpdate software-properties-common bzip2 zip iptables-persistent git bash-completion vim curl
+apt install -y --allow-unauthenticated build-essential checkinstall ntp ntpdate software-properties-common \
+bzip2 zip iptables-persistent git bash-completion vim curl htop dirmngr apt-transport-https gnupg2 \
+ca-certificates lsb-release
+apt purge -y --allow-remove-essential --auto-remove snapd
 
 echo
 echo "Adding some aliases";
@@ -102,9 +105,9 @@ echo "
 #                Part 2 -  NGINX, PHP and MariaDB                  #
 #####################################################################
 
-We can also install NGINX, PHP7 and MariaDB:
+We can also install NGINX, PHP8 and MariaDB:
   * Download and install NGINX (from NGINX not from ubuntu repo)
-  * Download and install PHP7
+  * Download and install PHP8
   * Download and install MariaDB
   * Configure NGINX to support PHP (Experimental)
 "
@@ -117,24 +120,24 @@ if [[ $response =~ ^(yes|y)$ ]]; then
     # MariaDB
     apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8
     touch /etc/apt/sources.list.d/MariaDB.list
-    echo "deb [arch=amd64,arm64,ppc64el] http://mirror.i3d.net/pub/mariadb/repo/10.4/ubuntu bionic main" > /etc/apt/sources.list.d/MariaDB.list
-    echo "deb-src http://mirror.i3d.net/pub/mariadb/repo/10.4/ubuntu bionic main" >> /etc/apt/sources.list.d/MariaDB.list
+    echo "deb [arch=amd64,arm64,ppc64el] https://mariadb.mirror.pcextreme.nl/repo/10.5/ubuntu focal main" > /etc/apt/sources.list.d/MariaDB.list
+    echo "deb-src https://mariadb.mirror.pcextreme.nl/repo/10.5/ubuntu focal main" >> /etc/apt/sources.list.d/MariaDB.list
 
     # Nginx
     wget http://nginx.org/keys/nginx_signing.key
     apt-key add nginx_signing.key
     rm -f ./nginx_signing.key
     touch /etc/apt/sources.list.d/nginx.list
-    echo "deb http://nginx.org/packages/mainline/ubuntu/ xenial nginx" > /etc/apt/sources.list.d/nginx.list
-    echo "deb-src http://nginx.org/packages/mainline/ubuntu/ xenial nginx" >> /etc/apt/sources.list.d/nginx.list
+    echo "deb http://nginx.org/packages/mainline/ubuntu/ focal nginx" > /etc/apt/sources.list.d/nginx.list
+    echo "deb-src http://nginx.org/packages/mainline/ubuntu/ focal nginx" >> /etc/apt/sources.list.d/nginx.list
 
     # PPA Redis
     add-apt-repository ppa:chris-lea/redis-server -y
     
-    # PHP 7.*
+    # PHP 8.* (PHP 7.* available if needed)
     add-apt-repository ppa:ondrej/php -y
 
-    apt-get update
+    apt update
 else
     echo "Terminating script";
     exit;
@@ -145,18 +148,19 @@ response=${response,,}    #
 if [[ $response =~ ^(yes|y)$ ]]; then
     echo "Installing MariaDB";
     echo "====================";
-    apt-get install -y mariadb-server
+    apt install -y --allow-unauthenticated mariadb-server
     echo "done"
     echo
 fi
 
-read -r -p "Do you want to install PHP 7.3 (including composer) [y/N]" response
+read -r -p "Do you want to install PHP 8.0 (including composer) [y/N]" response
 response=${response,,}    #
 if [[ $response =~ ^(yes|y)$ ]]; then
-    echo "Installing PHP 7.3";
+    echo "Installing PHP 8.0";
     echo "====================";
-    # apt-get install -y php7.0-fpm php7.0-mysql php-redis php7.0-curl php7.0-mcrypt php7.0-zip php-igbinary php7.0-mbstring php7.0-soap php7.0-xml
-    apt-get install -y php7.3-fpm php7.3-mysql php-redis php7.3-curl php7.3-zip php-igbinary php7.3-mbstring php7.3-soap php7.3-xml
+    apt install -y --allow-unauthenticated php8.0-fpm php8.0-mysql php8.0-redis php8.0-curl php8.0-zip php8.0-igbinary \
+    php8.0-mbstring php8.0-soap php8.0-xml php8.0-xsl php8.0-bcmath php8.0-gd php8.0-imap php8.0-imagick php8.0-uuid \
+    php8.0-yaml
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
     echo "done"
     echo
@@ -187,9 +191,7 @@ response=${response,,}    #
 if [[ $response =~ ^(yes|y)$ ]]; then
     echo "Changing PHP fpm to listen on a TCP socket ";
     # Comment out current listen setting, and add a new one below it
-    # sed -i -e 's@listen = /run/php/php7.0-fpm.sock@; listen = /run/php/php7.0-fpm.sock\nlisten = 127.0.0.1:9000@g' /etc/php/7.0/fpm/pool.d/www.conf
-    sed -i -e 's@listen = /run/php/php7.3-fpm.sock@; listen = /run/php/php7.3-fpm.sock\nlisten = 127.0.0.1:9000@g' /etc/php/7.3/fpm/pool.d/www.conf
-    service php7.3-fpm restart
+    sed -i -e 's@listen = /run/php/php8.0-fpm.sock@; listen = /run/php/php8.0-fpm.sock\nlisten = 127.0.0.1:9000@g' /etc/php/8.0/fpm/pool.d/www.conf
     echo "done"
     echo
 
@@ -204,21 +206,27 @@ if [[ $response =~ ^(yes|y)$ ]]; then
     [ -d "$DIR_SNIPPETS" ] || mkdir ${DIR_SNIPPETS}
     [ -d "$DIR_WWW" ] || mkdir -p ${DIR_WWW}
 
-    # download default nginx configs and put in correct locations
+    # download default nginx configs and put in correct locations, adjust some php.ini defaults
     wget https://github.com/moroswitie/finalize_ubuntu/raw/master/nginx/nginx.conf
     wget https://github.com/moroswitie/finalize_ubuntu/raw/master/nginx/fastcgi.conf
     wget https://github.com/moroswitie/finalize_ubuntu/raw/master/nginx/snippets/fastcgi-php.conf
     wget https://github.com/moroswitie/finalize_ubuntu/raw/master/nginx/snippets/well-known.conf
     wget https://github.com/moroswitie/finalize_ubuntu/raw/master/nginx/sites-available/default
+    wget https://github.com/moroswitie/finalize_ubuntu/raw/master/php/php.ini
     mv /etc/nginx/nginx.conf /etc/nginx/nginx.conf.backup
     mv ./nginx.conf /etc/nginx/
     mv ./fastcgi.conf /etc/nginx/
     mv ./fastcgi-php.conf /etc/nginx/snippets/
     mv ./well-known.conf /etc/nginx/snippets/
     mv ./default /etc/nginx/sites-available/
+    mv /etc/php8.0/fpm/php.ini /etc/php8.0/fpm/php.ini.backup
+    mv ./php.ini /etc/php8.0/fpm/php.ini
 
     # keep same user as default from distro
     # sed -i -e 's/user www-data/user nginx/g' /etc/nginx/nginx.conf
+
+    # Fix log rotate
+    sed -i -e 's/nginx adm/www-data adm/g' /etc/logrotate.d/nginx
 
     # create symlink to file if it doesn't exist
     DEFAULT_SITE=/etc/nginx/sites-enabled/default
@@ -236,6 +244,7 @@ if [[ $response =~ ^(yes|y)$ ]]; then
     # Create info page
     echo "<?php" > /var/www/html/info.php
     echo "phpinfo();" >> /var/www/html/info.php
+    service php8.0-fpm restart
     service nginx restart
     echo "done"
 
