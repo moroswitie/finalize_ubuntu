@@ -41,6 +41,11 @@ echo "Downloading and installing some basic tools";
 echo "===============================================================";
 echo
 
+# disable iptables prompt
+echo iptables-persistent iptables-persistent/autosave_v4 boolean true | debconf-set-selections
+echo iptables-persistent iptables-persistent/autosave_v6 boolean true | debconf-set-selections
+
+# install base packages
 apt install -y --allow-unauthenticated build-essential checkinstall ntp ntpdate software-properties-common \
 bzip2 zip iptables-persistent git bash-completion vim curl htop dirmngr apt-transport-https gnupg2 \
 ca-certificates lsb-release
