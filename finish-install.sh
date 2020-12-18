@@ -219,8 +219,8 @@ if [[ $response =~ ^(yes|y)$ ]]; then
     mv ./fastcgi-php.conf /etc/nginx/snippets/
     mv ./well-known.conf /etc/nginx/snippets/
     mv ./default /etc/nginx/sites-available/
-    mv /etc/php8.0/fpm/php.ini /etc/php8.0/fpm/php.ini.backup
-    mv ./php.ini /etc/php8.0/fpm/php.ini
+    mv /etc/php/8.0/fpm/php.ini /etc/php/8.0/fpm/php.ini.backup
+    mv ./php.ini /etc/php/8.0/fpm/php.ini
 
     # keep same user as default from distro
     # sed -i -e 's/user www-data/user nginx/g' /etc/nginx/nginx.conf
